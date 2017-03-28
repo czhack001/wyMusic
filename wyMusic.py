@@ -62,21 +62,24 @@ def songList(url):#网易云列表
     result=json.loads(data)
 #    print result.get('result')['trackCount']
     dir = r'd:\music'
-    while num<result.get('result')['trackCount']:
-        for i in  result.get('result')['tracks']:
-            s1='%s'%(i['name'])
-            s2='%s'%i['mp3Url']
-            webcode=urllib.urlopen(s2).code
-            #print webcode
-            if webcode==404:
-                print '没有这首歌曲，妈蛋！！！'
-            else:
-                muname = s1 + '.mp3'
-                finename = os.path.join(dir,muname)
-                urllib.urlretrieve(s2, finename)
-                print s1+u'下载完成'
-                num+=1
-                time.sleep(2)
+    try:
+        while num<result.get('result')['trackCount']:
+            for i in  result.get('result')['tracks']:
+                s1='%s'%(i['name'])
+                s2='%s'%i['mp3Url']
+                webcode=urllib.urlopen(s2).code
+                #print webcode
+                if webcode==404:
+                    print '没有这首歌曲，妈蛋！！！'
+                else:
+                    muname = s1 + '.mp3'
+                    finename = os.path.join(dir,muname)
+                    urllib.urlretrieve(s2, finename)
+                    print s1+u'下载完成'
+                    num+=1
+                    time.sleep(2)
+    except TypeError:
+        print '获取音乐失败没有这个数据'
 
 def down(url):
     resp=urllib.urlopen(url).read()
@@ -89,23 +92,26 @@ def down(url):
         data=resp
     result=json.loads(data)
     result_data=result.get('songs')
-    music_name= result_data[0]['name'] #歌曲名称
-    music_data=result_data[0]['mp3Url'] #MP3 文件下载地址
-    print music_name
-    print music_data
-    dir = r'd:\music'
-    webcode=urllib.urlopen(music_data).code
-    if webcode==404:
-        print '没有这首歌曲，妈蛋！！！'
-    else:
-        muname = music_name + '.mp3'
-        finename = os.path.join(dir,muname)
-        urllib.urlretrieve(music_data, finename)
-        print music_name+u'下载完成'
+    try:
+        music_name= result_data[0]['name'] #歌曲名称
+        music_data=result_data[0]['mp3Url'] #MP3 文件下载地址
+        print music_name
+        print music_data
+        dir = r'd:\music'
+        webcode=urllib.urlopen(music_data).code
+        if webcode==404:
+            print '没有这首歌曲，妈蛋！！！'
+        else:
+            muname = music_name + '.mp3'
+            finename = os.path.join(dir,muname)
+            urllib.urlretrieve(music_data, finename)
+            print music_name+u'下载完成'
+    except IndexError:
+        print '获取音乐失败没有这个数据'
 if __name__ =='__main__':
     optMan()
     #songList('http://music.163.com/#/m/song?id=36924229&userid=61466625')
     #listUrl('http://music.163.com/#/m/playlist?id=62679396&userid=61466625')
     #songList('http://music.163.com/api/playlist/detail?id=62679396&updateTime=-1')
-    #muUrl('http://music.163.com/#/m/song?id=95991&userid=61466625')
+#muUrl('http://music.163.com/#/m/song?id=95991&userid=61466625')
 
